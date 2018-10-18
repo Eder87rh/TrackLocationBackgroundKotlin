@@ -1,15 +1,21 @@
 package com.puertosoft.eder.locationtrackerkotlin.services
 
 import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.os.Looper
 import android.support.annotation.Nullable
 import android.support.v4.app.ActivityCompat
+import android.support.v4.app.NotificationCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.util.Log
 
@@ -20,6 +26,7 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.puertosoft.eder.locationtrackerkotlin.R
 
 import com.puertosoft.eder.locationtrackerkotlin.settings.Constants
 
@@ -33,7 +40,6 @@ class LocationMonitoringService : Service(), GoogleApiClient.ConnectionCallbacks
 
     internal var mLocationCallback: LocationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
-            Log.d(TAG, "ENTRA CALLBACK")
             val locationList = locationResult.locations
             if (locationList.size > 0) {
                 //The last location in the list is the newest
@@ -51,9 +57,42 @@ class LocationMonitoringService : Service(), GoogleApiClient.ConnectionCallbacks
         }
     }
 
+    private fun createNotificationChannel(channelId: String, channelName: String): String{
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val name = getString(R.string.channel_name)
+        val description = getString(R.string.channel_description)
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel(channelId, name, importance)
+        channel.description = description
+        // Register the channel with the system; you can't change the importance
+        // or other notification behaviors after this
+        val notificationManager = getSystemService(NotificationManager::class.java)
+
+            notificationManager!!.createNotificationChannel(channel)
+        }
+        return channelId
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        Log.d(TAG, "ENTRA onCreate")
+        val channelId = createNotificationChannel("my_service", "My Background Service")
+
+
+        //val notification =  Notification(R.drawable.icon, getText(R.string.ticker_text), System.currentTimeMillis())
+        val notification = NotificationCompat.Builder(this, channelId)
+            .setContentTitle("Tracking")
+            .setContentText("Traking your current position")
+            .setSmallIcon(R.drawable.ic_launcher_background)
+            .build()
+        //val notificationIntent =  Intent(this, ExampleActivity::class.java)
+        //val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
+        //notification.setLatestEventInfo(this, getText(R.string.notification_title), getText(R.string.notification_message), pendingIntent)
+        startForeground(Constants.ONGOING_NOTIFICATION_ID, notification);
+    }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        Log.d(TAG, "ENTRA")
+
 
         mLocationClient = GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)

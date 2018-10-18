@@ -7,6 +7,8 @@
     <string name="msg_alert_no_internet">Please make sure that you have active internet connection.</string>
     <string name="no_google_playservice_available">No Google Playservice found. Please install it.</string>
     <string name="msg_location_service_not_started">Location Tracking Not Started</string>
-    <string name="msg_location_service_started">Location Tracking Started</string>
+    <string name="msg_location_service_started">Location Tracking Started Kotlin</string>
     <string name="btn_label_refresh">Refresh</string>
+    <string name="channel_name">Channel_name</string>
+    <string name="channel_description">Channel_description</string>
 </resources>

@@ -2,6 +2,7 @@ package com.puertosoft.eder.locationtrackerkotlin
 
 
 import android.Manifest
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.DialogInterface
@@ -18,6 +19,7 @@ import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.app.NotificationCompat
 import android.util.Log
 import android.view.View
 import android.widget.TextView
@@ -27,6 +29,7 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 
 import com.puertosoft.eder.locationtrackerkotlin.services.LocationMonitoringService
+import com.puertosoft.eder.locationtrackerkotlin.settings.Constants
 
 class MainActivity:AppCompatActivity() {
     private var mAlreadyStartedService = false
@@ -160,12 +163,12 @@ class MainActivity:AppCompatActivity() {
         //This method will executed only once.
         if (!mAlreadyStartedService && mMsgView != null)
         {
-        mMsgView!!.setText(R.string.msg_location_service_started)
-         //Start location sharing service to app server.........
-        val intent = Intent(this, LocationMonitoringService::class.java)
-        startService(intent)
+            mMsgView!!.setText(R.string.msg_location_service_started)
+             //Start location sharing service to app server.........
+            val intent = Intent(this, LocationMonitoringService::class.java)
+            startService(intent)
 
-        mAlreadyStartedService = true //Ends................................................
+            mAlreadyStartedService = true //Ends................................................
         }
     }
 
