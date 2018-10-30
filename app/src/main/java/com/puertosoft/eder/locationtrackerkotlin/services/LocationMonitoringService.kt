@@ -78,8 +78,6 @@ class LocationMonitoringService : Service(), GoogleApiClient.ConnectionCallbacks
         Log.d(TAG, "ENTRA onCreate")
         val channelId = createNotificationChannel("my_service", "My Background Service")
 
-
-        //val notification =  Notification(R.drawable.icon, getText(R.string.ticker_text), System.currentTimeMillis())
         val notification = NotificationCompat.Builder(this, channelId)
             .setContentTitle("Tracking")
             .setContentText("Traking your current position")
